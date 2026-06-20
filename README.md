@@ -4,7 +4,7 @@ A Retrieval-Augmented Generation system that answers questions strictly
 from your own PDF/DOCX/TXT documents, with source-and-page citations, and
 refuses to answer when the documents don't contain the answer.
 
-🔗 **Live demo:** [https://your-app-name.streamlit.app](https://documentappchatbot-peidh37uk5ujxpvgdefzzz.streamlit.app/)
+🔗 **Live demo:** [Document Q&A Bot](https://documentappchatbot-peidh37uk5ujxpvgdefzzz.streamlit.app/)
 
 ## Architecture
 
