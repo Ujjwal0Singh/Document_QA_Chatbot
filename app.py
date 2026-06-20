@@ -1,8 +1,12 @@
 """
 app.py
 ------
-This assumes you've already run `python -m src.ingest` at least once so
-that db/ contains an indexed vector store - it does NOT re-embed anything.
+Optional bonus: a simple Streamlit web UI for the Document Q&A Bot.
+
+On first load, if no vector database exists yet (e.g. a fresh deploy on
+Streamlit Cloud, where db/ is git-ignored and never gets pushed), this
+automatically runs ingestion against whatever documents are in data/.
+On later runs/reruns, it just loads the existing database from disk.
 
 Run with:
     streamlit run app.py
@@ -14,14 +18,20 @@ os.environ.setdefault("PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION", "python")
 
 import streamlit as st
 
-from src import query
+from src import ingest, query
 
 st.set_page_config(page_title="Document Q&A Bot", page_icon="📄", layout="centered")
 
 
 @st.cache_resource(show_spinner="Loading vector database...")
 def get_collection():
-    return query.load_vector_store()
+    try:
+        return query.load_vector_store()
+    except RuntimeError:
+        # No index yet (fresh deploy) - build it now from data/.
+        with st.spinner("No index found yet - building it from data/ (first run only)..."):
+            ingest.run_ingestion()
+        return query.load_vector_store()
 
 
 def main():
